@@ -93,7 +93,6 @@ const Header = ({title, iconClassNameRight}) => {
   return(
     <AppBar
       title={title}
-      iconClassNameRight={iconClassNameRight}
     />
   )
 }
@@ -200,7 +199,12 @@ class Map extends Component{ // criamos nosso componente Map como classe pois pr
     this.handleFlyToAPosition = this.handleFlyToAPosition.bind(this)
   }
 
-  // AGORA A GRANDE SACADA... é preciso criar uma função que lide com o mapa, que no caso é a handleMap, mas temos um porém, se você não manja do lifecycle do react provavelmente voce iria quebrar a cabeça com isso, pois temos que chamar a função que lida com o mapa APÓS o componente ser carregado, para que só assim ela reconheça a div que setamos na propriedade 'container' caso contrario ele ira carregar o canvas para renderizar o mapa, mas não irá encontrar o componente que precisa 'joga-lo' dentro, portanto sabendo disso, chamamos a função handleMap na função componentDidMount, pois ela só vai ser executada depois do metodo render, ou seja, depois que nossos componentes já tiverem sido carregados.
+  > AGORA A GRANDE SACADA... é preciso criar uma função que lide com o mapa, que no caso é a handleMap, mas temos > um porém, se você não manja do lifecycle do react provavelmente voce iria quebrar a cabeça com isso, pois
+  > temos que chamar a função que lida com o mapa APÓS o componente ser carregado, para que só assim ela reconheça
+  > a div que setamos na propriedade 'container' caso contrario ele ira carregar o canvas para renderizar o mapa,
+  > mas não irá encontrar o componente que precisa 'joga-lo' dentro, portanto sabendo disso, chamamos a função
+  > handleMap na função componentDidMount, pois ela só vai ser executada depois do metodo render, ou seja, depois
+  > que nossos componentes já tiverem sido carregados.
 
   componentDidMount(){
     const { container, style, zoom, accessToken } = this.props
@@ -209,7 +213,9 @@ class Map extends Component{ // criamos nosso componente Map como classe pois pr
     this.handlePosition()
   }
 
-// a função handleMap, vai receber as props que passamos no homeContainer, e vai criar uma constante chamada Map, e que vai criar um novo mapa(a documentação do Mapbox tem todo esse getstated). Depois passamos para o state essa constante, apenas para não ficar criando objetos globais, pois precisaremos chamar esse cara depois.
+> a função handleMap, vai receber as props que passamos no homeContainer, e vai criar uma constante chamada Map, e
+> que vai criar um novo mapa(a documentação do Mapbox tem todo esse getstated). Depois passamos para o state essa
+> constante, apenas para não ficar criando objetos globais, pois precisaremos chamar esse cara depois.  
 
   handleMap(container, style, center, zoom, accessToken){
     mapboxgl.accessToken = accessToken
@@ -224,7 +230,10 @@ class Map extends Component{ // criamos nosso componente Map como classe pois pr
     })
   }
 
-// Aqui criamos uma função que usa uma feature do HTML5, chamada getCurrentPosition, que pega as informações de latitude e longitude do browser, caso o usuario permita, daí jogamos essas informações no estado da nossa aplicação para usar uma feature do mapbox logo em seguida, que vai fazer um 'flyTo' da posição inicial até a posição do usuario, esse evento é chamado pelo clique do botão 'Me Encontre'.
+> Aqui criamos uma função que usa uma feature do HTML5, chamada getCurrentPosition, que pega as informações de
+> latitude e longitude do browser, caso o usuario permita, daí jogamos essas informações no estado da nossa
+> aplicação para usar uma feature do mapbox logo em seguida, que vai fazer um 'flyTo' da posição inicial até a
+> posição do usuario, esse evento é chamado pelo clique do botão 'Me Encontre'.
 
   handlePosition(){
     const options = {
@@ -240,7 +249,10 @@ class Map extends Component{ // criamos nosso componente Map como classe pois pr
     }, options)
   }
 
-// E finalmente a função que vai fazer esse 'flyTo', ela apenas pega as informações que jogamos no estado e executa a ação, veja que aqui precisamos usar a constante 'map', pois quando voce usa o metodo 'new mapboxgl.Map' somente essa constante possui os metodos para lidarmos com ações no mapa, por isso jogamos ela no estado ai cria-la para nao ficarmos gerando objetos globais.
+> E finalmente a função que vai fazer esse 'flyTo', ela apenas pega as informações que jogamos no estado e executa
+> a ação, veja que aqui precisamos usar a constante 'map', pois quando voce usa o metodo 'new mapboxgl.Map'
+> somente essa constante possui os metodos para lidarmos com ações no mapa, por isso jogamos ela no estado ai
+> cria-la para nao ficarmos gerando objetos globais.
 
   handleFlyToAPosition(){
     const { center, map } = this.state
